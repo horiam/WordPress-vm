@@ -1,0 +1,33 @@
+#!/bin/bash
+
+source wpinstall
+
+WP_USER=${WP_USER:-bob}
+WP_PASSWORD=${WP_PASSWORD:-bob}
+
+echo "Using $WP_USER as user and $WP_PASSWORD as password"
+
+wpls()
+{
+  curl http://192.168.33.10/wp-json/wp/v2/posts
+}
+
+wprm()
+{
+  if [ -z "$1" ]; 
+  then
+	echo "You have to pass a post number to delete"
+  else
+        curl -u "$WP_USER":"$WP_PASSWORD" -X DELETE http://192.168.33.10/wp-json/wp/v2/posts/$1
+  fi
+}
+
+wpadd()
+{
+  if [ -z "$1" ]; 
+  then
+	echo "You have to pass a json file to add a post"
+  else
+        curl -u "$WP_USER":"$WP_PASSWORD" -X POST  -H "Content-Type: application/json" http://192.168.33.10/wp-json/wp/v2/posts -d @$1
+  fi
+}
